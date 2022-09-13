@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+    nginx:
+        restart: always
+        image: nginx:1.12-alpine
+        ports:
+            - 8000:8000
+        volumes:
+            - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - static_volume:/app/pymango/pymango/static
+    wsgiserver:
+        build:
+            context: .
+            dockerfile: ./docker/pymango/Dockerfile
+        entrypoint: /app/docker/pymango/wsgi-entrypoint.sh
+        volumes:
+            - static_volume:/app/pymango/pymango/static
+        expose:
+            - 8000
+volumes:
+    static_volume: {}
